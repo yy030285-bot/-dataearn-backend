@@ -290,9 +290,9 @@ async def register(payload: RegisterInput, response: Response):
 
     user = public_user({**doc, "_id": result.inserted_id})
     response.set_cookie("access_token", token(str(result.inserted_id), email, "access", 1),
-                        httponly=True, samesite="lax", max_age=900)
+                        httponly=True, samesite="none", secure=True, max_age=900)
     response.set_cookie("refresh_token", token(str(result.inserted_id), email, "refresh", 7),
-                        httponly=True, samesite="lax", max_age=604800)
+                        httponly=True, samesite="none", secure=True, max_age=604800)
     return user
 
 
@@ -303,9 +303,9 @@ async def login(payload: LoginInput, response: Response):
         raise HTTPException(401, "Email or password is incorrect")
     await ensure_referral_code(doc)
     response.set_cookie("access_token", token(str(doc["_id"]), doc["email"], "access", 1),
-                        httponly=True, samesite="lax", max_age=900)
+                        httponly=True, samesite="none", secure=True, max_age=900)
     response.set_cookie("refresh_token", token(str(doc["_id"]), doc["email"], "refresh", 7),
-                        httponly=True, samesite="lax", max_age=604800)
+                        httponly=True, samesite="none", secure=True, max_age=604800)
     return public_user(doc)
 
 
